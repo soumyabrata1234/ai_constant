@@ -35,11 +35,13 @@ app.use('/ai', aiRoutes);
 // Setup Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173', // Use
+    origin: process.env.CORS_ORIGIN,
     methods: ['GET', 'POST'],
     credentials: true,
   },
+  path: "/socket.io", // default, but can help sometimes
 });
+
 
 // Socket.IO Middleware for token auth (optional: replace with real validation)
 io.use((socket, next) => {
