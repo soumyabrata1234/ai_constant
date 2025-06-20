@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosInstance = axios.create({
-    baseURL: "localhost:3000",
+    baseURL: "https://ask-to-ai-5.onrender.com",
     headers: {
         "Authorization": `Bearer ${localStorage.getItem('token')}`
     }
