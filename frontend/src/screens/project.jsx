@@ -243,45 +243,41 @@ const Project = () => {
                                 </button>
                             ))}
                         </div>
-                       <button
-  onClick={async () => {
-    if (!webContainer) {
-      console.warn("WebContainer not ready yet");
-      return;
-    }
+                        <button
+                            onClick={async () => {
+                                await webContainer.mount(fileTree);
 
-    await webContainer.mount(fileTree);
+                                const installProcess = await webContainer.spawn("npm", ["install"]);
 
-    const installProcess = await webContainer.spawn("npm", ["install"]);
-    installProcess.output.pipeTo(new WritableStream({
-      write(chunk) {
-        console.log(chunk);
-      }
-    }));
+                                installProcess.output.pipeTo(new WritableStream({
+                                    write(chunk) {
+                                        console.log(chunk);
+                                    }
+                                }));
 
-    if (runProcess) {
-      runProcess.kill();
-    }
+                                 if (runProcess) {
+                                        runProcess.kill()
+                                    }
 
-    const runprocess = await webContainer.spawn("npm", ["start"]);
-    runprocess.output.pipeTo(new WritableStream({
-      write(chunk) {
-        console.log(chunk);
-      }
-    }));
+                                const runprocess = await webContainer.spawn("npm", ["start"]);
 
-    setRunProcess(runprocess);
+                                runprocess.output.pipeTo(new WritableStream({
+                                    write(chunk) {
+                                        console.log(chunk);
+                                    }
+                                }));
 
-    webContainer.on('server-ready', (port, url) => {
-      console.log(`Server is running at ${url}`);
-      setIframeurl(url);
-    });
-  }}
-  className="absolute right-4 top-2 bg-gray-200 text-gray-800 px-4 py-1 rounded shadow hover:bg-gray-300"
->
-  run
-</button>
+                                 setRunProcess(runprocess);
 
+                                webContainer.on('server-ready', (port, url) => {
+                                    console.log(`Server is running at ${url}`);
+                                    setIframeurl(url);
+                                });
+                            }}
+                            className="absolute right-4 top-2 bg-gray-200 text-gray-800 px-4 py-1 rounded shadow hover:bg-gray-300"
+                        >
+                            run
+                        </button>
                     </div>
 
                   <div className="code-content p-4 bg-gray-400 h-full overflow-y-auto">
